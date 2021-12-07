@@ -1,15 +1,37 @@
 import { StatusBar } from 'expo-status-bar';
 import React, { useState, useEffect } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { Camera } from 'expo-camera';
 
 export default function App() {
 
   const [type, setType] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
+  const [previewVisible, setPreviewVisible] = useState(false)
+  const [capturedImage, setCapturedImage] = useState(null)
 
   let camera = Camera;
 
+  const CameraPreview = ({photo}) => {
+    console.log('Photo', photo)
+    return (
+      <View
+        style={{
+          backgroundColor: 'transparent',
+          flex: 1,
+          width: '100%',
+          height: '100%'
+        }}
+      >
+        <ImageBackground
+          source={{uri: photo && photo.uri}}
+          style={{
+            flex: 1
+          }}
+        />
+      </View>
+    )
+  }
 
   const __startCamera = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync()
@@ -24,6 +46,9 @@ export default function App() {
   const __takePicture = async () => {
     if (!camera) return
     const photo = await camera.takePictureAsync()
+    console.log(photo)
+    setPreviewVisible(true)
+    setCapturedImage(photo)
    
   }
 
@@ -43,6 +68,8 @@ export default function App() {
             camera = r
           }} type={type} />
       ) : (
+        <>
+        <CameraPreview photo={capturedImage} />
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={__startCamera}
@@ -66,8 +93,20 @@ export default function App() {
             </Text>
           </TouchableOpacity>
         </View>
+        </>
       )
       }
+      
+      <TouchableOpacity
+            onPress={__takePicture}
+            style={{
+            width: 70,
+            height: 70,
+            bottom: 0,
+            borderRadius: 50,
+            backgroundColor: '#fff'
+            }}
+            />
       <StatusBar style="auto" />
     </View>
   );
