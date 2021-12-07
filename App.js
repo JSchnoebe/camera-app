@@ -69,7 +69,9 @@ export default function App() {
           }} type={type} />
       ) : (
         <>
+        {previewVisible && capturedImage ? (
         <CameraPreview photo={capturedImage} />
+        ) : (
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={__startCamera}
@@ -93,6 +95,7 @@ export default function App() {
             </Text>
           </TouchableOpacity>
         </View>
+        )}
         </>
       )
       }
