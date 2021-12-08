@@ -1,11 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { Camera } from 'expo-camera';
+import Logo from './Components/Logo';
 
 export default function App() {
 
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [type] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null)
@@ -33,6 +34,12 @@ export default function App() {
     )
   }
 
+  const __showPhotos = async () => {
+    return (
+      <CameraPreview photo={capturedImage} />
+    )
+  }
+
   const __startCamera = async () => {
     const { status } = await Camera.requestCameraPermissionsAsync()
     if (status === 'granted') {
@@ -49,8 +56,9 @@ export default function App() {
     console.log(photo)
     setPreviewVisible(true)
     setCapturedImage(photo)
-   
   }
+
+  console.log("captured image ", capturedImage)
 
   if (hasPermission === 'granted') {
     return <View />;
@@ -61,26 +69,31 @@ export default function App() {
 
   return (
     <View style={styles.container}>
-      <Text>This is Jaren's React Native App.</Text>
+        <Logo />
+        <Text>Welcome to Jaren's React Native App.</Text>
       {hasPermission ? (
-        <Camera style={{ flex: 1, width: "100%" }}
+        <Camera style={{ flex: 1, width: "100%", height: "100%" }}
           ref={(r) => {
             camera = r
           }} type={type} />
       ) : (
         <>
+        {previewVisible && capturedImage ? (
         <CameraPreview photo={capturedImage} />
+        ) : (
         <View style={styles.buttonContainer}>
           <TouchableOpacity
             onPress={__startCamera}
             style={{
               width: 130,
               borderRadius: 4,
-              backgroundColor: '#14274e',
+              backgroundColor: '#14874e',
               flexDirection: 'row',
               justifyContent: 'center',
               alignItems: 'center',
-              height: 40
+              height: 40,
+              marginHorizontal: 57,
+              marginTop: 30,
             }}>
             <Text
               style={{
@@ -92,7 +105,33 @@ export default function App() {
               Take a picture!
             </Text>
           </TouchableOpacity>
+
+          <TouchableOpacity
+            onPress={__showPhotos}
+            style={{
+              width: 130,
+              borderRadius: 4,
+              backgroundColor: '#14874e',
+              flexDirection: 'row',
+              justifyContent: 'center',
+              alignItems: 'center',
+              height: 40,
+              marginHorizontal: 57,
+              marginBottom: 30,
+              marginTop: 30
+            }}>
+              <Text
+                style={{
+                  color: '#fff',
+                  fontWeight: 'bold',
+                  textAlign: 'center'
+                }}>
+                Gallary
+              </Text>
+              </TouchableOpacity>
+          
         </View>
+        )}
         </>
       )
       }
@@ -108,6 +147,7 @@ export default function App() {
             }}
             />
       <StatusBar style="auto" />
+      
     </View>
   );
 }
@@ -119,5 +159,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
+  buttonContainer: {
+    borderRadius: 50,
+  }
 });
 
