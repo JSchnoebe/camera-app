@@ -3,7 +3,9 @@ import React from 'react';
 export default function Gallery() {
   return(
     <View style={styles.container}>
-      <CameraPreview photo={capturedImage} />
+      <Image
+      source={{ uri: this.state.path }}
+      />
     </View>
   );
 }

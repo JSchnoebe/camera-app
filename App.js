@@ -1,14 +1,12 @@
 import { StatusBar } from 'expo-status-bar';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ImageBackground } from 'react-native';
 import { Camera } from 'expo-camera';
 import Logo from './Components/Logo';
-import { Card } from 'react-native-paper';
-import { AutoFocus } from 'expo-camera/build/Camera.types';
 
 export default function App() {
 
-  const [type, setType] = useState(Camera.Constants.Type.back);
+  const [type] = useState(Camera.Constants.Type.back);
   const [hasPermission, setHasPermission] = useState(null);
   const [previewVisible, setPreviewVisible] = useState(false)
   const [capturedImage, setCapturedImage] = useState(null)
@@ -38,7 +36,7 @@ export default function App() {
 
   const __showPhotos = async () => {
     return (
-      <CameraPreview photo={capturedImage.uri} />
+      <CameraPreview photo={capturedImage} />
     )
   }
 
